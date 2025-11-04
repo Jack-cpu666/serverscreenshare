@@ -1,0 +1,25 @@
+{
+  "name": "webrtc-signaling-server",
+  "version": "1.0.0",
+  "description": "WebRTC signaling server for screen sharing app",
+  "main": "webrtc_server.js",
+  "scripts": {
+    "start": "node webrtc_server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "webrtc",
+    "signaling",
+    "websocket",
+    "screen-sharing"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "ws": "^8.14.2"
+  },
+  "engines": {
+    "node": ">=16.x"
+  }
+}
