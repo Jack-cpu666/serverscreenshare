@@ -269,6 +269,7 @@ wss.on('connection', (ws) => {
       }
     }
     else if (data.type === 'JOIN_GAME') {
+      console.log("Received JOIN_GAME request for room:", data.roomId); // Debug Log
       const room = rooms.get(data.roomId);
       if (room) {
         const player = room.addClient(ws, data.name || 'Player');
