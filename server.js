@@ -219,6 +219,19 @@ wss.on('connection', (ws) => {
   let currentRoom = null;
   let myPlayerId = null;
 
+  function broadcastRoomList() {
+    const list = [];
+    rooms.forEach(r => {
+      list.push({ id: r.id, name: r.name, type: r.type, players: r.players.length });
+    });
+    const msg = JSON.stringify({ type: 'ROOM_LIST', rooms: list });
+    wss.clients.forEach(client => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(msg);
+      }
+    });
+  }
+
   ws.on('message', (message) => {
     const data = JSON.parse(message);
 
@@ -244,6 +257,7 @@ wss.on('connection', (ws) => {
       myPlayerId = player.id;
 
       ws.send(JSON.stringify({ type: 'ROOM_CREATED', roomId, playerId: myPlayerId, gameType: room.type }));
+      broadcastRoomList(); // Broadcast update
 
       if (room.type === 'BID_WHIST') {
         room.start(); // Auto start for testing
@@ -256,6 +270,7 @@ wss.on('connection', (ws) => {
         currentRoom = room;
         myPlayerId = player.id;
         ws.send(JSON.stringify({ type: 'JOINED_ROOM', roomId: room.id, playerId: myPlayerId, gameType: room.type }));
+        broadcastRoomList(); // Broadcast update (player count changed)
 
         // Sync state
         if (room.type === 'BID_WHIST') {
@@ -283,6 +298,7 @@ wss.on('connection', (ws) => {
   ws.on('close', () => {
     if (currentRoom) {
       currentRoom.removeClient(ws);
+      broadcastRoomList(); // Broadcast update
     }
   });
 });
