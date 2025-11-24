@@ -12,6 +12,11 @@ const PORT = process.env.PORT || 3000;
 // Serve static files
 app.use(express.static(path.join(__dirname, '../')));
 
+// Root Route Handler
+app.get('/', (req, res) => {
+  res.send('<h1>Unified Game Server is Running!</h1><p>Connect via WebSocket.</p>');
+});
+
 // Game Managers
 const rooms = new Map(); // roomId -> Room Object
 
