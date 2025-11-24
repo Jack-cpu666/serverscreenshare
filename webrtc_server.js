@@ -83,6 +83,15 @@ function handleMessage(ws, message) {
     case 'leave':
       handleLeave(ws);
       break;
+      
+    // Game specific messages
+    case 'game-state':
+      forwardToRoom(ws, message);
+      break;
+
+    case 'player-move':
+        forwardToRoom(ws, message);
+        break;
     
     default:
       console.log('Unknown message type:', type);
@@ -222,29 +231,3 @@ process.on('SIGTERM', () => {
     process.exit(0);
   });
 });
-
-/* 
-RENDER.COM DEPLOYMENT NOTES:
-
-1. TLS/WSS: Render automatically provides TLS encryption for WebSocket connections.
-   - Your app will be available at: wss://your-app-name.onrender.com
-   - No SSL configuration needed - it's automatic!
-
-2. Port: Always use process.env.PORT (provided by Render)
-
-3. TURN Server Integration (optional for better connectivity):
-   - Add TURN server URLs to the client's RTCPeerConnection config
-   - Example TURN providers: Twilio, Metered, Xirsys
-   - Free option: Use coturn on a separate server
-   
-   In client code, update iceServers:
-   {
-     urls: 'turn:your-turn-server.com:3478',
-     username: 'your-username',
-     credential: 'your-password'
-   }
-
-4. Environment Variables (optional):
-   - Set in Render Dashboard under Environment
-   - Example: TURN_USERNAME, TURN_PASSWORD
-*/
